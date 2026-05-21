@@ -6,7 +6,7 @@
 /*   By: akkaraka <akkaraka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/17 21:25:46 by akkaraka          #+#    #+#             */
-/*   Updated: 2026/05/21 19:22:53 by akkaraka         ###   ########.fr       */
+/*   Updated: 2026/05/21 21:49:39 by akkaraka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ char	*ft_read_join(int fd, char *rest)
 {
 	char	*chunk;
 	int		bytes_read;
-	char	*temp;
 
 	chunk = malloc(BUFFER_SIZE + 1);
 	if (!chunk)
@@ -28,29 +27,26 @@ char	*ft_read_join(int fd, char *rest)
 		if (bytes_read == -1)// lesefehler -> chunk und rest freen
 		{
 			free(chunk);
-			free(rest);
 			return (NULL);
 		}
 		chunk[bytes_read] = '\0';//-------------------------------------------------
-		temp = ft_strjoin(rest, chunk);// alten rest und neuen chunk zusammenkleben
-		rest = temp;
+		(void)ft_strlcpy(chunk, rest, ft_strlen(rest));// alten rest und neuen chunk zusammenkleben
 	}
-	free(chunk);
-	return (rest);
+	return (chunk);
 }
 
-char	*ft_get_line(char *rest)
+char	*ft_get_line(char *chunk)
 {
 	int	len;
 
-	if (!rest || !*rest)
+	if (!chunk || !*chunk)
 		return (NULL);
 	len = 0;
-	while (rest[len] && rest[len] != '\n')//zaehlen wie viele zeichen bis \n -> \n gefunden oder str ende
+	while (chunk[len] && chunk[len] != '\n')//zaehlen wie viele zeichen bis \n -> \n gefunden oder str ende
 		len++;//--------------------------------------------------------------
-	if (rest[len] == '\n')//'\n' gefunden -> um 1 erhohen um '\n' mitzunehmen
+	if (chunk[len] == '\n')//'\n' gefunden -> um 1 erhohen um '\n' mitzunehmen
 		len++;//--------------------------------------------------------------
-	return (ft_substr(rest, 0, len));//schneide von posi 0 bis len raus -> fertige line
+	return (ft_substr(chunk, 0, len));//schneide von posi 0 bis len raus -> fertige line
 }
 
 char	*ft_get_rest(char *rest)
@@ -73,7 +69,7 @@ char	*ft_get_rest(char *rest)
 
 char	*get_next_line(int fd)
 {
-	static char	rest[BUFFER_SIZE];// bleibt zwischen 2 Aufrufen erhalten, speichert was nach dem \n ubrig bleibt
+	static char	*rest;// bleibt zwischen 2 Aufrufen erhalten, speichert was nach dem \n ubrig bleibt
 	char		*line;//----------------------------------------------------------------------------
 
 	if (fd < 0 || BUFFER_SIZE <= 0)// ungultiger fd oder BUFFER_SIZE

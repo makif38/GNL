@@ -6,7 +6,7 @@
 /*   By: akkaraka <akkaraka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/15 23:55:20 by akkaraka          #+#    #+#             */
-/*   Updated: 2026/05/19 21:49:00 by akkaraka         ###   ########.fr       */
+/*   Updated: 2026/05/21 21:34:53 by akkaraka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,6 @@ char	*ft_strjoin(const char *s1, const char *s2);
 size_t	ft_strlen(const char *s);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strdup(const char *s);
+size_t	ft_strlcpy(char *dest, const char *src, size_t size);
 
 #endif
