@@ -6,7 +6,7 @@
 /*   By: akkaraka <akkaraka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/15 23:53:07 by akkaraka          #+#    #+#             */
-/*   Updated: 2026/05/21 21:33:54 by akkaraka         ###   ########.fr       */
+/*   Updated: 2026/05/28 17:34:16 by akkaraka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ char	*ft_strjoin(const char *s1, const char *s2)
 	i = 0;
 	while (s2[i])
 		snew[j++] = s2[i++];
-	snew[j] = 0;
+	snew[j] = '\0';
 	return (snew);
 }
 
@@ -109,24 +109,4 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	}
 	s2[i] = '\0';
 	return (s2);
-}
-
-size_t	ft_strlcpy(char *dest, const char *src, size_t size)
-{
-	size_t	i;
-	size_t	srclen;
-
-	srclen = 0;
-	i = 0;
-	while (src[srclen])
-		srclen++;
-	if (size == 0)
-		return (srclen);
-	while (src[i] && i < size - 1)
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = '\0';
-	return (srclen);
 }
