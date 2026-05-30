@@ -6,7 +6,7 @@
 /*   By: akkaraka <akkaraka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/17 21:25:46 by akkaraka          #+#    #+#             */
-/*   Updated: 2026/05/28 20:36:36 by akkaraka         ###   ########.fr       */
+/*   Updated: 2026/05/30 11:51:41 by akkaraka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,26 +15,26 @@
 int	ft_read_join(int fd, char **rest)
 {
 	char	*chunk;
-	int		bytes_read;
 	char	*temp;
+	int		bytes_read;
 
 	bytes_read = 0;
 	chunk = malloc(BUFFER_SIZE + 1);
 	if (!chunk)
 		return (-1);
-	while (1)
+	while (!ft_strchr(*rest, '\n'))
 	{
-		if (ft_strchr(*rest, '\n'))
-			break ;
 		bytes_read = read(fd, chunk, BUFFER_SIZE);
-		if (bytes_read == 0)
+		if (bytes_read <= 0)
 			break ;
-		if (bytes_read == -1)
-			return (free(chunk), -1);
 		chunk[bytes_read] = '\0';
 		temp = ft_strjoin(*rest, chunk);
+		if (!temp)
+			return (free(chunk), -1);
 		free(*rest);
 		*rest = temp;
+		if (ft_strchr(chunk, '\n'))
+			break ;
 	}
 	free(chunk);
 	return (bytes_read);
@@ -58,50 +58,35 @@ char	*ft_get_rest(char **rest)
 {
 	int		i;
 	char	*n_rest;
+	char	*tmp;
 
-	i = 0;
 	if (!*rest)
 		return (NULL);
+	i = 0;
 	while ((*rest)[i] && (*rest)[i] != '\n')
 		i++;
-	n_rest = ft_substr(*rest, i + 1, ft_strlen(*rest) - i - 1);
-	if (!n_rest)
-		return (NULL);
-	if (n_rest)
-	{
-		free(*rest);
-		if (n_rest[0] != '\0')
-			*rest = n_rest;
-		else
-		{
-			free(n_rest);
-			*rest = NULL;
-		}
-	}
-	return (n_rest);
+	if (!(*rest)[i])
+		return (free(*rest), *rest = NULL, NULL);
+	tmp = *rest;
+	n_rest = ft_substr(tmp, i + 1, ft_strlen(tmp) - i - 1);
+	free(tmp);
+	if (!n_rest || !*n_rest)
+		return (free(n_rest), *rest = NULL, NULL);
+	return (*rest = n_rest, n_rest);
 }
 
 char	*get_next_line(int fd)
 {
 	static char	*rest;
 	char		*line;
-	char		*n_rest;
-	int			error;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	error = ft_read_join(fd, &rest);
-	if (error == -1)
-	{
-		free(rest);
-		rest = NULL;
-		return (NULL);
-	}
+	if (ft_read_join(fd, &rest) == -1)
+		return (free(rest), rest = NULL, NULL);
 	line = ft_get_line(&rest);
-	n_rest = ft_get_rest(&rest);
-	if (!n_rest)
-		return (NULL);
-	if (!line)
-		return (free(line), NULL);
+	if (!line || !*line)
+		return (free(line), free(rest), rest = NULL, NULL);
+	ft_get_rest(&rest);
 	return (line);
 }
