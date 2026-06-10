@@ -6,7 +6,7 @@
 /*   By: akkaraka <akkaraka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/15 23:55:20 by akkaraka          #+#    #+#             */
-/*   Updated: 2026/05/30 10:28:02 by akkaraka         ###   ########.fr       */
+/*   Updated: 2026/06/10 19:09:56 by akkaraka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <stdlib.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 10
+#  define BUFFER_SIZE 9
 # endif
 
 char	*get_next_line(int fd);

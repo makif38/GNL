@@ -33,26 +33,31 @@ gcc -Wall -Wextra -Werror -D BUFFER_SIZE=42 get_next_line.c get_next_line_utils.
 ```
 
 Files to submit: `get_next_line.c`, `get_next_line_utils.c`, `get_next_line.h`
-
-**Bonus** (multiple file descriptors simultaneously):
-
-```bash
-gcc -Wall -Wextra -Werror -D BUFFER_SIZE=42 \
-    get_next_line_bonus.c get_next_line_utils_bonus.c -o gnl_bonus
 ```
-
 ---
 
 ## Usage Example
 
 ```c
-int fd = open("file.txt", O_RDONLY);
-char *line;
+#include "get_next_line.h"
+#include <stdio.h>
+#include <fcntl.h>
 
-while ((line = get_next_line(fd)) != NULL)
+int main(void)
 {
-    printf("%s", line);
-    free(line);
+	int		 fd_1;
+	int			i;
+	char	*line;
+
+	i = 1;
+    int fd = open("file.txt", O_RDONLY);
+    char *line;
+
+    while ((line = get_next_line(fd)) != NULL)
+    {
+        printf("%s", line);
+        free(line);
+    }
 }
 close(fd);
 ```
