@@ -6,7 +6,7 @@
 /*   By: akkaraka <akkaraka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/15 23:53:07 by akkaraka          #+#    #+#             */
-/*   Updated: 2026/06/12 21:23:14 by akkaraka         ###   ########.fr       */
+/*   Updated: 2026/06/12 23:31:03 by akkaraka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,32 +40,6 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
-{
-	size_t	i;
-	size_t	slen;
-	char	*s2;
-
-	i = 0;
-	if (s == NULL)
-		return (NULL);
-	slen = ft_strlen(s);
-	if ((size_t)start >= ft_strlen(s))
-		return (ft_strdup(""));
-	if (len > slen - start)
-		len = slen - start;
-	s2 = malloc(len + 1);
-	if (!s2)
-		return (NULL);
-	while (i < len)
-	{
-		s2[i] = s[start + i];
-		i++;
-	}
-	s2[i] = '\0';
-	return (s2);
-}
-
 char	*ft_strjoin(const char *s1, const char *s2)
 {
 	char	*snew;
@@ -91,22 +65,53 @@ char	*ft_strjoin(const char *s1, const char *s2)
 	return (snew);
 }
 
-char	*ft_strdup(const char *s)
+void	*ft_memmove(void *dest, const void *src, size_t n)
 {
-	char	*d;
-	size_t	i;
-	size_t	len;
+	size_t				i;
+	unsigned char		*d;
+	const unsigned char	*s;
 
-	len = ft_strlen(s);
-	d = malloc(len + 1);
-	if (!d)
-		return (NULL);
 	i = 0;
-	while (i < len)
+	d = ((unsigned char *)dest);
+	s = ((const unsigned char *)src);
+	if (d == s)
+		return (dest);
+	if (d < s)
 	{
-		d[i] = s[i];
+		while (n--)
+		{
+			d[i] = s[i];
+			i++;
+		}
+	}
+	else
+	{
+		while (n--)
+		{
+			d[n] = s[n];
+		}
+	}
+	return (dest);
+}
+
+size_t	ft_strlcat(char *dest, const char *src, size_t size)
+{
+	size_t	i;
+	size_t	srclen;
+	size_t	destlen;
+
+	srclen = ft_strlen(src);
+	destlen = ft_strlen(dest);
+	i = 0;
+	if (size == 0)
+		return (srclen);
+	if (destlen >= size)
+		return (size + srclen);
+	while (src[i] && destlen + i < size - 1)
+	{
+		dest[destlen + i] = src[i];
 		i++;
 	}
-	d[i] = '\0';
-	return (d);
+	dest[destlen + i] = '\0';
+	return (srclen + destlen);
 }

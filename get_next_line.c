@@ -6,87 +6,76 @@
 /*   By: akkaraka <akkaraka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/17 21:25:46 by akkaraka          #+#    #+#             */
-/*   Updated: 2026/06/12 21:17:11 by akkaraka         ###   ########.fr       */
+/*   Updated: 2026/06/12 23:43:30 by akkaraka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	ft_read_join(int fd, char **rest)
+int	ft_read_join(int fd, char *rest, char **line)
 {
-	char	*chunk;
-	char	*temp;
+	char	chunk[BUFFER_SIZE + 1];
 	int		bytes_read;
-
-	bytes_read = 0;
-	chunk = malloc(BUFFER_SIZE + 1);
-	if (!chunk)
-		return (-1);
-	while (!ft_strchr(*rest, '\n'))
-	{
-		bytes_read = read(fd, chunk, BUFFER_SIZE);
-		if (bytes_read <= 0)
-			break ;
-		chunk[bytes_read] = '\0';
-		temp = ft_strjoin(*rest, chunk);
-		if (!temp)
-			return (free(chunk), -1);
-		free(*rest);
-		*rest = temp;
-		if (ft_strchr(chunk, '\n'))
-			break ;
-	}
-	free(chunk);
-	return (bytes_read);
-}
-
-char	*ft_get_line(char **rest)
-{
-	int	len;
-
-	if (!*rest)
-		return (NULL);
-	len = 0;
-	while ((*rest)[len] && (*rest)[len] != '\n')
-		len++;
-	if ((*rest)[len] == '\n')
-		len++;
-	return (ft_substr(*rest, 0, len));
-}
-
-char	*ft_get_rest(char **rest)
-{
-	int		i;
-	char	*n_rest;
 	char	*tmp;
 
-	if (!*rest)
+	while (!ft_strchr(rest, '\n'))
+	{
+		if (*rest)
+			return (tmp = ft_strjoin(*line, rest), free(*line),
+				*line = tmp, rest[0] = '\0', ft_read_join(fd, rest, line));
+		bytes_read = read(fd, chunk, BUFFER_SIZE);
+		if (bytes_read == -1)
+			return (free(*line), *line = NULL, rest[0] = '\0', -1);
+		if (bytes_read == 0)
+			return (0);
+		chunk[bytes_read] = '\0';
+		if (ft_strchr(chunk, '\n'))
+			return (ft_strlcat(rest, chunk, BUFFER_SIZE + 1), 1);
+		tmp = ft_strjoin(*line, chunk);
+		free(*line);
+		*line = tmp;
+	}
+	return (1);
+}
+
+char	*ft_get_line(char **line, char *rest)
+{
+	char	*nline_pos;
+	char	*res;
+	char	*tmp;
+
+	nline_pos = ft_strchr(rest, '\n');
+	if (!nline_pos && (!*line || !**line))
 		return (NULL);
-	i = 0;
-	while ((*rest)[i] && (*rest)[i] != '\n')
-		i++;
-	if (!(*rest)[i])
-		return (free(*rest), *rest = NULL, NULL);
-	tmp = *rest;
-	n_rest = ft_substr(tmp, i + 1, ft_strlen(tmp) - i - 1);
-	free(tmp);
-	if (!n_rest || !*n_rest)
-		return (free(n_rest), *rest = NULL, NULL);
-	return (*rest = n_rest, n_rest);
+	if (nline_pos)
+	{
+		*nline_pos = '\0';
+		tmp = ft_strjoin(*line, rest);
+		free(*line);
+		*line = NULL;
+		res = ft_strjoin(tmp, "\n");
+		free(tmp);
+		ft_memmove(rest, nline_pos + 1, ft_strlen(nline_pos + 1) + 1);
+	}
+	else
+	{
+		res = ft_strjoin(*line, "");
+		free(*line);
+		*line = NULL;
+		rest[0] = '\0';
+	}
+	return (res);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*rest;
+	static char	rest[BUFFER_SIZE + 1];
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (ft_read_join(fd, &rest) == -1)
-		return (free(rest), rest = NULL, NULL);
-	line = ft_get_line(&rest);
-	if (!line || !*line)
-		return (free(line), free(rest), rest = NULL, NULL);
-	ft_get_rest(&rest);
-	return (line);
+	line = NULL;
+	if (ft_read_join(fd, rest, &line) == -1)
+		return (NULL);
+	return (ft_get_line(&line, rest));
 }
