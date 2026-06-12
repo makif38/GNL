@@ -29,12 +29,10 @@ A single string was chosen over a linked list because it is the minimal structur
 ## Instructions
 
 ```bash
-gcc -Wall -Wextra -Werror -D BUFFER_SIZE=42 get_next_line.c get_next_line_utils.c -o gnl
+gcc -Wall -Wextra -Werror -D BUFFER_SIZE=42 get_next_line.c get_next_line_utils.c -g
 ```
 
 Files to submit: `get_next_line.c`, `get_next_line_utils.c`, `get_next_line.h`
-```
----
 
 ## Usage Example
 
@@ -50,16 +48,15 @@ int main(void)
 	char	*line;
 
 	i = 1;
-    int fd = open("file.txt", O_RDONLY);
-    char *line;
-
-    while ((line = get_next_line(fd)) != NULL)
-    {
-        printf("%s", line);
-        free(line);
-    }
+	fd_1 = open("test.txt", O_RDONLY);
+	while ((line = get_next_line(fd_1)) != NULL)
+	{
+		printf("Line %d for fd %d: %s\n", i, fd_1, line);
+		free(line);
+		i++;
+	}	
+	close(fd_1);
 }
-close(fd);
 ```
 
 ---
@@ -68,7 +65,5 @@ close(fd);
 
 - [man read(2)](https://man7.org/linux/man-pages/man2/read.2.html)
 - [man open(2)](https://man7.org/linux/man-pages/man2/open.2.html)
-- [Static storage duration – cppreference](https://en.cppreference.com/w/c/language/storage_duration)
-- [Norminette](https://github.com/42School/norminette)
 
-**AI usage:** Claude (Anthropic) was used to clarify how `static` variables persist between calls, discuss edge cases (`BUFFER_SIZE=1`, empty files, no trailing newline). The implementation code was written by hand.
+**AI usage:** Claude (Anthropic) was used to clarify how `static` variables persist between calls, discuss edge cases (`BUFFER_SIZE=1`, empty files, no trailing newline) and fixing memory leaks. The implementation code was written by hand.
