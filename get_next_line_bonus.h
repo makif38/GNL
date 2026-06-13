@@ -6,7 +6,7 @@
 /*   By: akkaraka <akkaraka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 20:51:48 by akkaraka          #+#    #+#             */
-/*   Updated: 2026/06/13 21:30:24 by akkaraka         ###   ########.fr       */
+/*   Updated: 2026/06/13 22:11:03 by akkaraka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-# ifndef BUFFFER_SIZE
+# ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
 # endif
 
