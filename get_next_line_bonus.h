@@ -6,7 +6,7 @@
 /*   By: akkaraka <akkaraka@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 20:51:48 by akkaraka          #+#    #+#             */
-/*   Updated: 2026/06/13 21:03:16 by akkaraka         ###   ########.fr       */
+/*   Updated: 2026/06/13 21:30:24 by akkaraka         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,4 @@ size_t	ft_strlcat(char *dest, const char *src, size_t size);
 void	*ft_memmove(void *dest, const void *src, size_t n);
 size_t	ft_strlen(const char *s);
 
-# endif
+#endif
